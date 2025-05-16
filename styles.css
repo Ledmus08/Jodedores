@@ -1,0 +1,131 @@
+/* CSS (estilos.css) */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #000000;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: linear-gradient(90deg, #009714, #156b21);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+header p {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #ffffffbd;
+}
+
+/* Barra de navegación horizontal simplificada */
+.nav-bar {
+  display: flex;
+  justify-content: center; /* Asegura que los elementos estén centrados */
+  background-color: #222;
+  padding: 10px 0; /* Espaciado vertical adecuado */
+  width: 100%;
+  box-sizing: border-box; /* Para que el padding no afecte el ancho */
+  margin-top: -5px; /* Ajuste fino si es necesario para alinear con la barra superior */
+}
+
+.section-link {
+  background-color: transparent;
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem; /* Ajuste de espaciado */
+  margin: 0 15px; /* Espaciado horizontal entre los elementos */
+  font-size: 1.2rem; /* Un tamaño de fuente más armonioso */
+  font-weight: normal;
+  text-align: center;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.section-link:hover {
+  background-color: #00e613;
+}
+
+.time-list {
+  margin: 2rem auto;
+  max-width: 500px;
+  text-align: left;
+  background: #222;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.time-entry {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.time-entry:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+header {
+  margin-bottom: 1rem;
+}
+
+.gif-container {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+footer {
+  background: #000000;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  color: #999;
+  border-top: 2px solid #333;
+}
+
+button {
+  background-color: #ff0080;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e60073;
+}
+
+::selection {
+  background: #ff66c4;
+  color: #000;
+}
+
+.gif-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px; /* Opcional: bordes redondeados */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Opcional: sombra */
+}

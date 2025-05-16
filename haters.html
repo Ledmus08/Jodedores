@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="https://cdn.7tv.app/emote/01JR248ZPAY05RXFGMWB5VD61D/1x.avif" />
+
+    <title> Racistada </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; 
+            background-color: #000; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; 
+            position: relative;
+            flex-direction: column; 
+            color: white; 
+            font-size: 2em;
+            font-family: 'Press Start 2P', cursive; 
+            text-align: center;
+        }
+
+        #image-container {
+            z-index: 2; 
+            max-width: 50%; 
+            max-height: 50%; 
+        }
+
+        #main-image {
+            display: block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
+        }
+
+        #blinking-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; 
+        }
+
+        #final-panel {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 3; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #final-image {
+            max-width: 50%;
+            height: auto;
+            margin-bottom: 1em; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="image-container">
+        <img id="main-image" src="broxdd.gif" alt="BROXDD">
+    </div>
+
+    <div id="blinking-background"></div>
+
+    <audio id="pipaxd-sound" autoplay>
+        <source src="pipaxd.mp3" type="audio/mpeg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <div id="final-panel">
+        <img id="final-image" src="https://cdn.7tv.app/emote/01G038Y95G0006QCHD84CZS1JM/4x.avif" alt="PogU">
+        <div style="font-family: 'Press Start 2P', cursive;">Racista</div> </div>
+
+    <script>
+        const imageContainer = document.getElementById('image-container');
+        const mainImage = document.getElementById('main-image');
+        const blinkingBackground = document.getElementById('blinking-background');
+        const pipaxdSound = document.getElementById('pipaxd-sound');
+        const finalPanel = document.getElementById('final-panel');
+        const finalPanelText = finalPanel.querySelector('div'); 
+
+        function setRandomBackgroundColor() {
+            const randomValue = Math.random();
+
+            if (randomValue < 0.1) {
+                blinkingBackground.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            } else {
+                const alpha = Math.random() * 0.3 + 0.1;
+                blinkingBackground.style.backgroundColor = `rgba(255, 255, 255, ${alpha})`;
+            }
+        }
+
+        const backgroundInterval = setInterval(setRandomBackgroundColor, 20);
+
+        setTimeout(() => {
+
+            if (imageContainer) imageContainer.style.display = 'none';
+            clearInterval(backgroundInterval);
+            if (blinkingBackground) blinkingBackground.style.display = 'none';
+            if (pipaxdSound) pipaxdSound.pause();
+
+            if (finalPanel) finalPanel.style.display = 'flex';
+
+            if (finalPanelText) finalPanelText.style.fontFamily = "'Press Start 2P', cursive";
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000); 
+        }, 3500); 
+    </script>
+
+</body>
+</html>

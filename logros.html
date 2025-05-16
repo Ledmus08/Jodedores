@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="https://cdn.7tv.app/emote/01JR248ZPAY05RXFGMWB5VD61D/1x.avif" />
+
+    <title>Salón de Trofeos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive; /* ¡Aquí está la fuente! */
+            margin: 0;
+            background-color: #f4f4f4;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden; /* Para ocultar el tumbleweed fuera de pantalla inicialmente */
+        }
+
+        .trophy-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .trophy-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trophy-label {
+            font-weight: bold;
+        }
+
+        .trophy-value {
+            color: red; /* Números en rojo */
+        }
+
+        /* Estilos del tumbleweed */
+        .desert {
+            background: transparent; /* Fondo transparente para no tener el rojo */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8rem;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .desert .tumbleweed {
+            position: absolute;
+            top: 0;
+            left: -5rem;
+            background: url(https://img.icons8.com/ios/1600/tumbleweed.png) no-repeat center;
+            background-size: cover;
+            width: 5rem;
+            height: 5rem;
+            animation: jumping 1.5s infinite, rolling 10s linear infinite, rotating 2s linear infinite; /* Rolling más lento */
+            filter: sepia(50%) hue-rotate(-20deg) brightness(120%); /* Tono marrón claro */
+        }
+
+        @keyframes jumping {
+            0% {
+                top: 0rem;
+                animation-timing-function: ease-in;
+            }
+            25% {
+                top: 3rem;
+                animation-timing-function: ease-out;
+            }
+            50% {
+                top: 1rem;
+                animation-timing-function: ease-in;
+            }
+            75% {
+                top: 3rem;
+                animation-timing-function: ease-out;
+            }
+            100% {
+                top: 0rem;
+                animation-timing-function: ease-in;
+            }
+        }
+
+        @keyframes rolling {
+            0% {
+                left: -5rem;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes rotating {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        .fly {
+            position: absolute;
+            background-color: #333; /* Gris oscuro */
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 10; 
+        }
+
+
+        .spiderweb-corner {
+            position: absolute;
+            color: #222; 
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .top-right-web {
+            top: -30px; 
+            right: -30px; 
+            transform: scaleX(-1) scale(1.2); 
+        }
+
+        .spiderweb-svg {
+            width: 100px;
+            height: 100px; 
+        }
+
+        #volver-button {
+            padding: 10px 20px;
+            font-size: 10px; 
+            cursor: pointer;
+            background-color: #333333; 
+            color: rgb(255, 255, 255); 
+            border: none; 
+            border-radius: 5px; 
+            font-family: 'Press Start 2P', cursive; 
+        }
+
+        #volver-button:hover {
+            background-color: #555555; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Salón de Trofeos</h1>
+
+    <div class="trophy-container">
+        <div class="trophy-item">
+            <span class="trophy-label">Juegos Terminados:</span>
+            <span class="trophy-value" id="juegos-terminados">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Veces prendiendo 2 días seguidos:</span>
+            <span class="trophy-value" id="dias-seguidos">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Veces llegando a Diamante:</span>
+            <span class="trophy-value" id="veces-diamante">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Subs Regaladas:</span>
+            <span class="trophy-value" id="subs-regaladas">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Días sin dar la chapa:</span>
+            <span class="trophy-value" id="dias-sin-chapa">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Veces pidiendo perdón:</span>
+            <span class="trophy-value" id="veces-perdon">0</span>
+        </div>
+        <div class="trophy-item">
+            <span class="trophy-label">Días prendiendo +4 horas:</span>
+            <span class="trophy-value" id="horas-prendido">0</span>
+        </div>
+    </div>
+
+    <div class="desert">
+        <div class="tumbleweed"></div>
+    </div>
+
+    <div class="spiderweb-corner top-right-web">
+        <svg class="spiderweb-svg" viewBox="0 0 100 100">
+            <path d="M 0 0 C 30 20, 70 20, 100 0 M 0 30 C 20 50, 80 50, 100 30 M 0 60 C 10 80, 90 80, 100 60 M 0 100 L 100 0 M 0 0 L 100 100 M 50 0 L 50 100" stroke="#222" stroke-width="1.5" fill="none"/>
+            <path d="M 20 10 A 10 10 0 0 1 10 20 M 80 10 A 10 10 0 0 0 90 20 M 10 40 A 10 10 0 0 0 20 50 M 90 40 A 10 10 0 0 1 80 50 M 20 70 A 10 10 0 0 1 10 80 M 80 70 A 10 10 0 0 0 90 80" stroke="#222" stroke-width="1" fill="none"/>
+        </svg>
+    </div>
+    <button style="position: absolute; top: 10px; left: 10px; background-color: #333333; color: rgb(255, 255, 255); padding: 10px 20px; font-size: 12px; cursor: pointer; z-index: 1000; border: none; border-radius: 8px; font-weight: bold; font-family: 'Press Start 2P', cursive;" onclick="window.location.href='index.html'">Volver</button>
+
+        <audio id="grilloxd" autoplay loop volume="0.2">
+        <source src="grilloxd.mp3" type="audio/mpeg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <script>
+        const flies = [];
+
+        function createFly(id) {
+            const fly = document.createElement('div');
+            fly.classList.add('fly');
+            fly.id = `fly-${id}`; // Asignar un ID único
+            document.body.appendChild(fly);
+            flies.push(fly);
+
+            const maxX = window.innerWidth;
+            const maxY = window.innerHeight;
+            let x = Math.random() * maxX;
+            let y = Math.random() * maxY;
+            let targetX = Math.random() * maxX;
+            let targetY = Math.random() * maxY;
+            const speed = 0.5 + Math.random() * 1; // Velocidad aleatoria
+
+            function moveFly() {
+                const dx = targetX - x;
+                const dy = targetY - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 1) {
+                    targetX = Math.random() * maxX;
+                    targetY = Math.random() * maxY;
+                } else {
+                    const stepX = dx / distance * speed;
+                    const stepY = dy / distance * speed;
+                    x += stepX;
+                    y += stepY;
+                    fly.style.left = `${x}px`;
+                    fly.style.top = `${y}px`;
+                }
+                requestAnimationFrame(moveFly);
+            }
+
+            moveFly();
+        }
+
+
+        createFly(1);
+        createFly(2);
+
+                const audioElement = document.getElementById('grilloxd');
+        audioElement.volume = 0.1; 
+
+
+    </script>
+</body>
+</html>

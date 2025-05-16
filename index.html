@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Jodedores - La Comunidad </title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.7tv.app/emote/01JR248ZPAY05RXFGMWB5VD61D/1x.avif" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+
+        .nav-bar {
+            display: flex;
+            justify-content: center; 
+            background-color: #333; 
+            padding: 15px 20px; 
+            width: 90%; 
+            margin: 20px auto; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+        }
+
+        .nav-item {
+            margin: 0 15px; 
+        }
+
+        .nav-link {
+            color: #eee; 
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold; 
+            padding: 10px 15px; 
+            border-radius: 5px;
+            transition: background-color 0.3s ease; 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .nav-link:hover {
+            background-color: #555; 
+        }
+
+        .time-list {
+            margin: 2rem auto;
+            max-width: 500px;
+            text-align: left;
+            background: #222;
+            border-radius: 10px;
+            padding: 1rem;
+            position: relative; 
+        }
+
+        .time-entry {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #fff;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .time-entry:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 3rem;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        header {
+            margin-bottom: 1rem;
+            text-align: center; 
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        header p {
+            font-size: 12px;
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .gif-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 12px;
+            color: #777; 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        #popup-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); 
+            z-index: 1000;
+            cursor: none; 
+        }
+
+        #popup-image {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            cursor: none; 
+        }
+
+        #laser-pointer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            pointer-events: none; 
+            z-index: 1001; 
+            display: none; 
+        }
+
+        .opgg-container {
+            position: absolute;
+            top: 55%;
+            right: calc((100% - 90%) / 2); 
+            transform: translateY(-50%);
+            text-align: right;
+            background-color: #333333c9; 
+            padding: 20px; 
+            border-radius: 5px;
+            width: auto; 
+        }
+
+        .opgg-content {
+            text-align: right;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .link-button {
+            display: block; 
+            padding: 8px 15px; 
+            background-color: #009714;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            border-radius: 0px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 5px; 
+            width: fit-content; 
+            align-self: flex-end; 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .link-button:hover {
+            background-color: #0056b3;
+        }
+
+        .main-image-container {
+            position: absolute;
+            top: 50%;
+            left: calc(50px + 70px); 
+            transform: translateY(-50%);
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.1); 
+            padding: 10px; 
+            border-radius: 5px;
+            width: 120px; 
+            cursor: pointer;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        #main-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0);
+            margin-bottom: 5px; 
+        }
+
+        #overlay-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            max-width: 200px;
+            max-height: 150px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .main-image-container.opened #overlay-image {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .peru-flag-container {
+            position: absolute;
+            bottom: -120px; 
+            left: calc(50px + 70px); 
+            display: inline-block; 
+        }
+
+        #peru-flag {
+            width: 100px; 
+            height: auto;
+            transition: transform 0.1s ease-in-out; 
+        }
+
+        .sub-gratis-container {
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 10px); 
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            pointer-events: none; 
+            opacity: 0; 
+            transition: opacity 0.3s ease-in-out;
+            white-space: nowrap; 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .main-image-container:hover .sub-gratis-container {
+            opacity: 1; 
+        }
+
+        #video-player-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black; 
+            padding: 20px; 
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            z-index: 1003; 
+        }
+
+        #video-player {
+            width: 320px; 
+            height: 240px; 
+        }
+
+        #close-video-button {
+            position: absolute;
+            top: -15px; 
+            right: -15px; 
+            background: rgba(25, 95, 3, 0); 
+            color: white;
+            border: none;
+            font-size: 12px; 
+            cursor: pointer;
+            border-radius: 50%; 
+            width: 30px; 
+            height: 30px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1; 
+            padding: 0; 
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0); 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .precioname-container {
+            position: absolute;
+            top: 50%;
+            left: calc(100% + 10px); 
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            pointer-events: none; 
+            opacity: 1; 
+            transition: opacity 0.3s ease-in-out;
+            white-space: nowrap; 
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .peru-flag-container:hover .precioname-container {
+            opacity: 0; 
+        }
+
+        #video-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1002; 
+        }
+
+        .right-images-container {
+position: absolute;
+bottom: -230px;
+right: calc(80px + 70px); 
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+        .right-images-container img {
+width: 120px;
+height: auto;
+margin-top: 5px;
+}
+
+</style>
+</head>
+<body>
+    <header>
+        <h1>Jodedores</h1>
+        <p> Chat dominante y basado <img src="https://cdn.7tv.app/emote/01FSVYAQX0000651CCCG314YEB/3x.avif" alt="Emoji basado" style="height: 40px; vertical-align: middle;"> </p>
+    </header>
+
+    <nav class="nav-bar">
+        <div class="nav-item">
+            <a href="antisimps.html" class="nav-link"> Anti-Simps </a>
+        </div>
+        <div class="nav-item">
+            <a href="pomodoro.html" class="nav-link"> Pomodoro </a>
+        </div>
+        <div class="nav-item">
+            <a href="piscina.html" class="nav-link"> Piscina </a>
+        </div>
+        <div class="nav-item">
+            <a href="logros.html" class="nav-link"> Logros </a>
+        </div>
+        <div class="nav-item">
+            <a href="haters.html" class="nav-link"> Haters </a>
+        </div>
+        <div class="nav-item">
+            <a href="masona.html" class="nav-link"> Masona </a>
+        </div>
+    </nav>
+
+    <div class="gif-container">
+        <img src="https://cdn.7tv.app/emote/01J3KMEXXR0004BE3DN7Y1GQR4/4x.avif" alt="Gif divertido de la streamer">
+    </div>
+
+    <h2> 🕒 Hora en países de LATAM </h2>
+    <div class="time-list" id="timeList">
+    </div>
+
+    <div class="opgg-container">
+        <div class="opgg-content">
+            <p style="text-align: center;"> Actualizar <img src="https://cdn.7tv.app/emote/01F6MQH3Q8000FFJ97ZB8PS6PZ/4x.avif" alt="Emoji basado" style="height: 40px; vertical-align: middle;"> </p>
+            <a href="https://op.gg/es/lol/summoners/euw/jolonos-uwu" target="_blank" class="link-button">
+                Ver Perfil en OP.GG
+            </a>
+        </div>
+    </div>
+    <div id="popup-container">
+        <img id="popup-image" src="https://cdn.7tv.app/emote/01GD95G5E000078SG0G477YGH3/4x.avif" alt="Imagen emergente">
+    </div>
+    <div class="main-image-container" id="mainImageContainer">
+        <img id="main-image" src="https://cdn.7tv.app/emote/01FKGR9GZR000E100ZQ63RHSWA/4x.avif" alt="Imagen principal">
+        <img id="overlay-image" src="https://cdn.7tv.app/emote/01HGJ0VNR0000B1X72C5J9NHYN/4x.avif" alt="Imagen superpuesta">
+        <div class="sub-gratis-container">Sub Gratis</div>
+    </div>
+    <div id="laser-pointer"></div>
+    <div class="peru-flag-container">
+        <img id="peru-flag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Flag_of_Peru_(state).svg/1920px-Flag_of_Peru_(state).svg.png" alt="Bandera de Perú">
+        <div class="precioname-container">Presioname</div>
+    </div>
+    <div id="video-player-container">
+        <button id="close-video-button">&times;</button>
+        <video id="video-player" controls style="width: 100%; height: 100%;">
+            <source src="peruxd.mp4" type="video/mp4">
+            Tu navegador no soporta el formato de video.
+        </video>
+    </div>
+    <div id="video-overlay"></div>
+    <div class="right-images-container">
+    <img src="https://cdn.7tv.app/emote/01JFN2A2J5Q2FDH5FWJT31JSZA/4x.avif" alt="Imagen 1">
+    <img src="https://cdn.7tv.app/emote/01H47RECRG000DKW0Y4MGZV1GX/4x.avif" alt="Imagen 2">
+</div>
+
+    <audio id="click-sound" src="shot-from-an-abandoned-building-at-an-enemy.mp3" volume="0.2"> </audio>
+
+    <script>
+        const mainImageContainer = document.getElementById('mainImageContainer');
+        const mainImage = document.getElementById('main-image');
+        const overlayImage = document.getElementById('overlay-image');
+
+        mainImageContainer.addEventListener('click', () => {
+            mainImageContainer.classList.toggle('opened');
+        });
+
+        const popupContainer = document.getElementById('popup-container');
+        const popupImage = document.getElementById('popup-image');
+        const laserPointer = document.getElementById('laser-pointer');
+        const clickSound = document.getElementById('click-sound');
+        let animationInterval;
+        let startTime;
+        let startPosition;
+        const duration = 5000; 
+        let isPopupVisible = false;
+
+        function showPopup() {
+            popupContainer.style.display = 'flex';
+            laserPointer.style.display = 'block';
+            isPopupVisible = true;
+            startMovingImage();
+        }
+
+        function hidePopup() {
+            popupContainer.style.display = 'none';
+            laserPointer.style.display = 'none';
+            isPopupVisible = false;
+            clearInterval(animationInterval);
+        }
+
+        function getRandomPosition() {
+            const maxX = window.innerWidth - popupImage.offsetWidth;
+            const maxY = window.innerHeight - popupImage.offsetHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            return { x: randomX, y: randomY };
+        }
+
+        function startMovingImage() {
+            const endPosition = getRandomPosition();
+            startPosition = {
+                x: parseFloat(popupImage.style.left) || (window.innerWidth - popupImage.offsetWidth) / 2,
+                y: parseFloat(popupImage.style.top) || (window.innerHeight - popupImage.offsetHeight) / 2
+            };
+            startTime = null;
+
+            const animate = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1); 
+
+                const newX = startPosition.x + (endPosition.x - startPosition.x) * progress;
+                const newY = startPosition.y + (endPosition.y - startPosition.y) * progress;
+
+                popupImage.style.left = `${newX}px`;
+                popupImage.style.top = `${newY}px`;
+
+                if (progress < 1 && isPopupVisible) {
+                    animationInterval = requestAnimationFrame(animate);
+                } else if (isPopupVisible) {
+
+                    setTimeout(startMovingImage, 1000); 
+                }
+            };
+
+            if (isPopupVisible) {
+                animationInterval = requestAnimationFrame(animate);
+            }
+        }
+
+        popupImage.addEventListener('click', () => {
+            hidePopup();
+            clickSound.play();
+        });
+
+        setInterval(showPopup, 10000);
+
+        popupContainer.style.display = 'none';
+        laserPointer.style.display = 'none';
+
+        document.addEventListener('mousemove', (e) =>{
+            if (isPopupVisible) {
+                laserPointer.style.left = `${e.clientX - 5}px`; 
+                laserPointer.style.top = `${e.clientY - 5}px`; 
+            }
+        });
+        const audioElement = document.getElementById('click-sound');
+        audioElement.volume = 0.2; 
+
+        const peruFlag = document.getElementById('peru-flag');
+        let currentOffsetPeru = 0;
+        const bounceSpeedPeru = 0.3;
+        const bounceAmplitudePeru = 15;
+        let animationPeru;
+
+        function animatePeruFlag() {
+            currentOffsetPeru += bounceSpeedPeru;
+            peruFlag.style.transform = `translateY(${Math.sin(currentOffsetPeru) * bounceAmplitudePeru}px)`;
+            animationPeru = requestAnimationFrame(animatePeruFlag);
+        }
+
+        animatePeruFlag(); 
+
+        const peruFlagContainer = document.querySelector('.peru-flag-container');
+        const videoPlayerContainer = document.getElementById('video-player-container');
+        const closeVideoButton = document.getElementById('close-video-button');
+        const videoPlayer = document.getElementById('video-player');
+        const videoOverlay = document.getElementById('video-overlay');
+
+        peruFlagContainer.addEventListener('click', () => {
+            videoPlayerContainer.style.display = 'block';
+            videoOverlay.style.display = 'block'; 
+            videoPlayer.play();
+            cancelAnimationFrame(animationPeru); 
+        });
+
+        closeVideoButton.addEventListener('click', () => {
+            videoPlayerContainer.style.display = 'none';
+            videoOverlay.style.display = 'none'; 
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            animatePeruFlag(); 
+        });
+
+    </script>
+    <script src="hora-latam.js"></script>
+</body>
+</html>

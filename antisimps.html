@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="https://cdn.7tv.app/emote/01JR248ZPAY05RXFGMWB5VD61D/1x.avif" />
+
+    <title> Anti-Simps </title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #270000;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            cursor: none; 
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #game-canvas {
+            background-image: url('https://i.pinimg.com/originals/27/b3/85/27b385154b11f15b3b78864112555b74.gif');
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: none; 
+        }
+
+        #hearts-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+.heart {
+
+    font-size: 24px; 
+    color: #fd0127; 
+    line-height: 24px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heart.lost {
+    opacity: 0.3;
+    color: #cc4f5e; 
+}
+
+        #ammo-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 16px;
+            z-index: 10;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 2px solid #000000;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.993);
+        }
+
+        #game-over-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 11;
+            display: none;
+        }
+
+        #game-over-content {
+            background-color: #00000065;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 4px solid #ff0000;
+        }
+
+        #game-over-title {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        #game-over-text {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+
+        #restart-button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ff0000;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #restart-button:hover {
+            background-color: #ff0000;
+        }
+
+        .hit-marker {
+            width: 10px;
+            height: 10px;
+            background-color: rgb(109, 109, 109);
+            border-radius: 50%;
+            position: absolute;
+            z-index: 10;
+        }
+
+        .cursor {
+            display: none;
+        }
+
+        #reloading-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 13;
+            display: none;
+        }
+
+        #reloading-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .casing {
+            width: 10px;
+            height: 16px;
+            background-color: yellow;
+            position: absolute;
+            border-radius: 2px;
+            z-index: 9; 
+        }
+
+        #goal-line {
+            position: absolute;
+            top: 0;
+            right: 40px; 
+            width: 8px; 
+            height: 100%;
+            background: linear-gradient(to bottom, #00ff00, #ffff00, #00ff00); 
+            opacity: 0.6;
+            box-shadow: -3px 0 7px rgba(0, 255, 0, 0.8);
+        }
+
+    </style>
+</head>
+<body>
+
+        <audio id="doomthemexd" autoplay loop volume="0.2">
+        <source src="doomtheme.flac" type="audio/mpeg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <div class="container">
+        <canvas id="game-canvas"></canvas>
+        <div id="hearts-container">
+            <div class="heart"></div>
+            <div class="heart"></div>
+            <div class="heart"></div>
+            <div class="heart"></div>
+            <div class="heart"></div>
+        </div>
+        <div id="ammo-counter">Balas: 30</div>
+         <div id="game-over-modal">
+            <div id="game-over-content">
+                <h2 id="game-over-title"> <img src="https://cdn.7tv.app/emote/01GC27DF6G000BVX64F65YV245/4x.avif" alt="Emoji basado" style="height: 40px; vertical-align: middle;"> </h2> 
+                <p id="game-over-text">Te alcanzaron los simps...</p> 
+                <button id="restart-button">Volver a jugar</button>
+            </div>
+        </div>
+        <div class="cursor" id="custom-cursor"></div>
+        <div id="reloading-modal">
+            <div id="reloading-content">Recargando...</div>
+        </div>
+        <div id="goal-line"></div>
+    </div>
+
+<button style="position: absolute; top: 10px; left: 10px; background-color: rgba(255, 0, 0, 0.568); color: white; padding: 10px 20px; font-size: 12px; cursor: pointer; z-index: 1000; border: none; border-radius: 8px; font-weight: bold; font-family: 'Press Start 2P', cursive;" onclick="window.location.href='index.html'">Volver</button>    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const heartsContainer = document.getElementById('hearts-container');
+        const ammoCounterDisplay = document.getElementById('ammo-counter');
+        const gameOverModal = document.getElementById('game-over-modal');
+        const restartButton = document.getElementById('restart-button');
+        const customCursor = document.getElementById('custom-cursor');
+        const reloadingModal = document.getElementById('reloading-modal');
+        const goalLine = document.getElementById('goal-line');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        goalLine.style.height = canvas.height + 'px'; 
+
+        let hearts = 5;
+        let ammo = 30;
+        let images = [];
+        let hitMarkers = [];
+        let casings = []; 
+        let gameRunning = true;
+        let animationId;
+        let reloading = false;
+        let isShooting = false;
+        let shootInterval;
+        const fireRate = 100; 
+        let lastShootTime = 0; 
+        let currentMouseX = 0;
+        let currentMouseY = 0;
+
+        const shooterSound = new Tone.Player({
+            url: 'disparoxd.mp3',
+            volume: -20,
+        }).toDestination();
+
+        const gameOverSound = new Tone.MembraneSynth({
+            pitchDecay: 0.05,
+            octaves: 10,
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4, attackCurve: 'exponential' }
+        }).toDestination();
+
+        const reloadSound = new Tone.Synth({
+            oscillator: { type: 'sawtooth' },
+            envelope: { attack: 0.01, decay: 0.1, sustain: 0.01, release: 0.3 }
+        }).toDestination();
+
+        function createImage(url, x, y, speed) {
+            const img = new Image();
+            img.src = url;
+            img.onload = () => {
+                images.push({ img, x, y, speed, width: 50, height: 50, hit: false });
+            };
+        }
+
+        function createRandomImage() {
+            const urls = [
+                "https://cdn.7tv.app/emote/01GD95G5E000078SG0G477YGH3/4x.avif",
+                "https://cdn.7tv.app/emote/01GD95G5E000078SG0G477YGI1/4x.avif",
+                "https://cdn.7tv.app/emote/01GE7Q9B9N6M3N2CQV9ZADK44W/4x.avif",
+                "https://cdn.7tv.app/emote/01GECM9D9KNYB4G2WJ99K5BPTK/4x.avif",
+                "https://cdn.7tv.app/emote/60ad52f525b5871465b4f494/4x.avif",
+                "https://cdn.7tv.app/emote/61114951c9013cb25c08717a/4x.avif",
+                "https://cdn.7tv.app/emote/612329897423c8b155991704/4x.avif",
+                "https://cdn.7tv.app/emote/613597a1947041520d2911c8/4x.avif",
+                "https://cdn.7tv.app/emote/6147a354b2c598900c4312b8/4x.avif",
+                "https://cdn.7tv.app/emote/615a0c18a78946a30c8a18f9/4x.avif",
+                "https://cdn.7tv.app/emote/616c9b697754c6a30ffb2115/4x.avif",
+                "https://cdn.7tv.app/emote/617ee7b261bad2a30f11158e/4x.avif",
+                "https://cdn.7tv.app/emote/619130b317a569a30f4901b9/4x.avif",
+                "https://cdn.7tv.app/emote/61a37a88411885a30f7b1a7a/4x.avif",
+                "https://cdn.7tv.app/emote/61b5d6b878984ca30f028a5a/4x.avif",
+                "https://cdn.7tv.app/emote/61c82a88946209a30f4b1a8a/4x.avif",
+                "https://cdn.7tv.app/emote/61da7a8861bad2a30f331a8a/4x.avif",
+                "https://cdn.7tv.app/emote/61eca8b87754c6a30f231a8a/4x.avif",
+                "https://cdn.7tv.app/emote/620f0a8817a569a30f111a8a/4x.avif",
+                "https://cdn.7tv.app/emote/62217a88411885a30f9b1a8a/4x.avif"
+
+            ];
+            const url = urls[Math.floor(Math.random() * urls.length)];
+            const x = -50;
+            const y = Math.random() * (canvas.height - 100) + 50;
+            const speed = Math.random() * 3 + 1; 
+            createImage(url, x, y, speed);
+        }
+
+function drawHearts() {
+    heartsContainer.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = '❤️'; 
+        if (i >= hearts) {
+            heart.classList.add('lost');
+        }
+        heartsContainer.appendChild(heart);
+    }
+}
+
+        function drawAmmoCounter() {
+            ammoCounterDisplay.textContent = `Balas: ${ammo}`;
+            ammoCounterRect = ammoCounterDisplay.getBoundingClientRect(); 
+        }
+
+        function drawImages() {
+            images.forEach(image => {
+                if (!image.hit) {
+                    ctx.drawImage(image.img, image.x, image.y, image.width, image.height);
+                }
+            });
+        }
+
+        function drawHitMarkers() {
+            hitMarkers.forEach(marker => {
+                ctx.beginPath();
+                ctx.arc(marker.x, marker.y, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = 'brown';
+                ctx.fill();
+                ctx.closePath();
+            });
+        }
+
+        function drawCasings() {
+            casings.forEach(casing => {
+                ctx.fillStyle = 'yellow';
+                ctx.fillRect(casing.x, casing.y, casing.width, casing.height);
+            });
+        }
+
+        function updateGame() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawHearts();
+            drawAmmoCounter();
+            drawImages();
+            drawHitMarkers();
+            drawCasings();
+
+            images.forEach((image, index) => {
+                image.x += image.speed;
+                if (image.x > canvas.width) {
+                    images.splice(index, 1);
+                    if (!image.hit) {
+                        hearts--;
+                        if (hearts <= 0) {
+                            gameOver();
+                        }
+                    }
+                }
+            });
+
+            hitMarkers.forEach((marker, index) => {
+                marker.timeToLive--;
+                if (marker.timeToLive <= 0) {
+                    hitMarkers.splice(index, 1);
+                }
+            });
+
+            casings.forEach((casing, index) => {
+                casing.x += casing.speedX;
+                casing.y += casing.speedY;
+                casing.alpha -= 0.01; 
+                if (casing.alpha <= 0) {
+                    casings.splice(index, 1);
+                }
+            });
+
+if (Math.random() < 0.7) { 
+    createRandomImage();
+}
+
+            animationId = requestAnimationFrame(updateGame);
+        }
+
+        let ammoCounterRect = null; 
+
+        function shoot(x, y) {
+            if (!gameRunning || reloading || ammo <= 0 || !ammoCounterRect) return;
+
+            shooterSound.start();
+            ammo--;
+            drawAmmoCounter();
+            hitMarkers.push({ x, y, timeToLive: 30 }); 
+
+            const casingX = ammoCounterRect.left + ammoCounterRect.width / 2;
+            const casingY = ammoCounterRect.top + ammoCounterRect.height / 2;
+            const angle = Math.random() * Math.PI / 2 - Math.PI / 4; 
+            const speed = Math.random() * 2 + 1; 
+            casings.push({
+                x: casingX,
+                y: casingY,
+                width: 4,
+                height: 8,
+                speedX: Math.cos(angle) * speed * 1.5, 
+                speedY: -Math.sin(angle) * speed * 1.5, 
+                alpha: 1
+            });
+
+            for (let i = 0; i < images.length; i++) {
+                const image = images[i];
+                if (!image.hit && x > image.x && x < image.x + image.width && y > image.y && y < image.y + image.height) {
+                    images[i].hit = true;
+                    images.splice(i, 1);
+                    break;
+                }
+            }
+
+            if (ammo <= 0 && hearts > 0 && !reloading) {
+                startReload();
+            }
+        }
+
+        function handleMouseDown(event) {
+            if (!gameRunning || reloading || ammo <= 0) return;
+            isShooting = true;
+            const rect = canvas.getBoundingClientRect();
+            currentMouseX = event.clientX - rect.left;
+            currentMouseY = event.clientY - rect.top;
+
+            shoot(currentMouseX, currentMouseY);
+            lastShootTime = Date.now();
+
+            shootInterval = setInterval(() => {
+                if (isShooting && !reloading && ammo > 0 && gameRunning) {
+                    const currentTime = Date.now();
+                    if (currentTime - lastShootTime >= fireRate) {
+                        shoot(currentMouseX, currentMouseY);
+                        lastShootTime = currentTime;
+                    }
+                } else if (ammo <= 0 && hearts > 0 && !reloading) {
+                    startReload();
+                    clearInterval(shootInterval);
+                    isShooting = false;
+                } else if (!gameRunning) {
+                    clearInterval(shootInterval);
+                    isShooting = false;
+                }
+            }, fireRate / 2); 
+        }
+
+        function handleMouseMove(event) {
+            const rect = canvas.getBoundingClientRect();
+            currentMouseX = event.clientX - rect.left;
+            currentMouseY = event.clientY - rect.top;
+        }
+
+        function handleMouseUp() {
+            isShooting = false;
+            clearInterval(shootInterval);
+        }
+
+        function handleMouseOut() {
+            isShooting = false;
+            clearInterval(shootInterval);
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            cancelAnimationFrame(animationId);
+            gameOverSound.triggerAttackRelease("C2", "2n");
+            gameOverModal.style.display = 'flex';
+        }
+
+        function restartGame() {
+            gameOverModal.style.display = 'none';
+            hearts = 5;
+            ammo = 30;
+            images = [];
+            hitMarkers = [];
+            casings = [];
+            gameRunning = true;
+            reloading = false;
+            isShooting = false;
+            clearInterval(shootInterval);
+            drawHearts();
+            drawAmmoCounter();
+            updateGame();
+        }
+
+        function startReload() {
+            if (reloading) return;
+            reloading = true;
+            isShooting = false;
+            clearInterval(shootInterval);
+            reloadingModal.style.display = 'flex';
+            reloadSound.triggerAttackRelease("G2", "2n");
+            setTimeout(() => {
+                ammo = 30;
+                reloading = false;
+                reloadingModal.style.display = 'none';
+                drawAmmoCounter();
+            }, 3000);
+        }
+
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove); 
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('mouseout', handleMouseOut);
+        restartButton.addEventListener('click', restartGame);
+
+        drawHearts();
+        drawAmmoCounter();
+        updateGame();
+
+        const cursorCanvas = document.createElement('canvas');
+        cursorCanvas.width = 16;
+        cursorCanvas.height = 16;
+        const cursorCtx = cursorCanvas.getContext('2d');
+
+        cursorCtx.fillStyle = 'red';
+        cursorCtx.beginPath();
+        cursorCtx.arc(8, 8, 7, 0, 2 * Math.PI); 
+        cursorCtx.fill();
+
+        const cursorURL = cursorCanvas.toDataURL();
+
+        document.body.style.cursor = `url('${cursorURL}') 8 8, auto`;
+        canvas.style.cursor = `url('${cursorURL}') 8 8, auto`;
+
+        customCursor.style.display = 'none';
+
+        const audioElement = document.getElementById('doomthemexd');
+        audioElement.volume = 0.8; 
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" href="https://cdn.7tv.app/emote/01JR248ZPAY05RXFGMWB5VD61D/1x.avif" />
+    <title>Masonada</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #000000;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: linear-gradient(90deg, #009714, #006400); 
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 2.rem;
+            color: #fff;
+            letter-spacing: 1px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+        }
+
+        header p {
+            font-size: 12px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+        }
+
+        .info-card {
+            padding: 2.5rem;
+            margin-bottom: 1rem;
+            max-width: 950px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 151, 20, 0.15);
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            text-align: center; 
+        }
+
+        .info-card h2 {
+            color: #009714;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem; 
+            margin-bottom: 1rem;
+        }
+
+        .info-card p {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            line-height: 1.6; 
+            text-align: left; 
+        }
+
+        .typewriter-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-family: 'Press Start 2P', cursive; 
+            font-size: 12px; 
+        }
+
+        .typewriter-text {
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 2px solid rgba(0, 151, 20, 0.5);
+            font-size: 12px;
+            flex-grow: 1;
+            margin-right: 15px;
+            line-height: 1.6; 
+
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #009714; }
+        }
+
+        .generated-image {
+            height: 45px;
+            vertical-align: middle;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #text-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .falling-emoji {
+            position: fixed;
+            font-size: 2.2rem;
+            z-index: 1;
+            animation: fall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh);
+                opacity: 1;
+            }
+        }
+
+        .separator {
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, #009714, #006400);
+            margin: 1rem auto;
+            opacity: 0.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #b3b3b3;
+            font-size: 12px;
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+        }
+
+        footer p {
+            margin: 0.3rem 0;
+        }
+
+        footer a {
+            color: #f0f0f0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        #ingresos-image-container {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            max-width: 950px;
+            margin: 1rem auto;
+            z-index: 9;
+        }
+
+        #ingresos-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+                #volver-button {
+            padding: 10px 20px;
+            font-size: 10px; 
+            cursor: pointer;
+            background-color: #00971400; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-family: 'Press Start 2P', cursive; 
+        }
+
+        #volver-button:hover {
+            background-color: #00971400; 
+        }
+    </style>
+</head>
+<body>
+<audio id="miAudio2" autoplay loop volume="0.2">
+    <source src="Shane-McMahon-Here-Comes-The-Money.mp3" type="audio/mpeg">
+    Tu navegador no soporta la reproducción de audio.
+</audio>
+
+    <div id="emoji-container">
+    </div>
+
+    <header style="background: linear-gradient(90deg, #006400, #003300);">
+        <h1>El Imperio Digital de una Masona</h1>
+        <p>La verdad detras de todo <img src="https://cdn.7tv.app/emote/01GXY8F948000CAGQJD077GE47/4x.avif" alt="Emoji basado" style="height: 40px; vertical-align: middle;"></p>
+    </header>
+
+    <div class="info-card" style="box-shadow: 0 8px 20px rgba(0, 100, 0, 0.2);">
+        <h2 style="color: #009714; text-align: center;"> Ingresos Exponenciales y Propiedades </h2>
+        <p style="font-family: 'Press Start 2P', cursive; font-size: 12px;"> Con ingresos mensuales superiores a los 15.000 euros y 500 diarios (Literal mas que un neurocirujano) esta streamer ha trascendido el mundo del streaming, acumulando una riqueza que rivaliza con profesiones de alta especialización. <img src="https://cdn.7tv.app/emote/01JJC5C9WWP3F95RH7HEP9X9W6/4x.avif" alt="Emoji basado" style="height: 40px; vertical-align: middle;"> </p>
+        <div id="text-container">
+        </div>
+    </div>
+
+    <div id="ingresos-image-container">
+        <img id="ingresos-image" src="ingresos.png" alt="Ingresos.png">
+    </div>
+
+    <div class="separator" style="background: linear-gradient(90deg, #006400, #003300);"></div>
+
+    <button style="position: absolute; top: 10px; left: 10px; background-color: #009714; color: white; padding: 10px 20px; font-size: 12px; cursor: pointer; z-index: 1000; border: none; border-radius: 8px; font-weight: bold; font-family: 'Press Start 2P', cursive;" onclick="window.location.href='index.html'">Volver</button>
+
+    <script>
+        const audioElement = document.getElementById('miAudio2');
+        audioElement.volume = 0.2;
+
+        const parrafos = [
+            "Actualmente presume de 2 propiedades, una valuada en 150.500 euros y la otra en 350.000 euros (La cual cuenta con 3 baños) Además, posee 3 coches de alta gama (Uno de ellos lo compró con las ganancias del último extensible donde recaudó una cifra de cinco dígitos en una sola noche). Y por si fuera poco, también cuenta con el 20% del porcentaje de la famosa empresa multimillonaria KnowEats.",
+            "Con todo esto y gracias a sus ingresos ganados en venta de regalos de subs en Wallapop, su patrimonio total supera los 850.000 euros y creciendo (De esto, tendrá que pagar a hacienda un total estimado de entre 750 y 1.500 euros anuales) Oficialmente asi, entrando a la categoría de “masona” entre los streamers: esa élite digital donde ya no se habla de subs, sino de inversión, propiedades, y cuántos ceros hay en la cuenta bancaria.",
+            "Y lo peor de todo es que, no tiene planes de frenar .....     "
+        ];
+
+        let indice = 0;
+        const container = document.getElementById('text-container');
+        const emojiContainer = document.getElementById('emoji-container');
+        const emojis = ['💰', '💵', '💸', '💶', '💷', '💎', '📈', '🚀'];
+
+        function crearEmoji() {
+            if (Math.random() < 0.2) { 
+                const emoji = document.createElement('div');
+                emoji.classList.add('falling-emoji');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = `${Math.random() * 100}vw`;
+                emoji.style.animationDuration = `${Math.random() * 4 + 3}s`;
+                emoji.style.fontSize = `${Math.random() * 2 + 1.2}rem`;
+                emoji.style.opacity = 0;
+                emojiContainer.appendChild(emoji);
+
+                emoji.addEventListener('animationend', () => {
+                    emoji.remove();
+                });
+            }
+        }
+
+        setInterval(crearEmoji, 250); 
+
+        function escribirParrafo(texto, i = 0, textoElement, imagenSrc, callback) {
+            if (i < texto.length) {
+                textoElement.textContent += texto.charAt(i);
+                setTimeout(() => escribirParrafo(texto, i + 1, textoElement, imagenSrc, callback), 20);
+            } else {
+                textoElement.classList.remove('typewriter-text');
+                const img = document.createElement('img');
+                img.src = imagenSrc;
+                img.classList.add('generated-image');
+                textoElement.parentNode.appendChild(img);
+                if (callback) {
+                    callback();
+                }
+            }
+        }
+
+        function mostrarSiguienteParrafo() {
+            if (indice < parrafos.length) {
+                const div = document.createElement('div');
+                div.classList.add('typewriter-container');
+                const p = document.createElement('p');
+                p.classList.add('typewriter-text');
+                div.appendChild(p);
+                container.appendChild(div);
+
+                let imagenSrc = 'https://cdn.7tv.app/emote/01JJC5C9WWP3F95RH7HEP9X9W6/4x.avif';
+                if (indice === parrafos.length - 1) {
+                    imagenSrc = 'https://cdn.7tv.app/emote/01H6HR1QGR000FMZQ9NVXJ2FSQ/4x.avif';
+                }
+
+                escribirParrafo(parrafos[indice], 0, p, imagenSrc, () => {
+                    indice++;
+                    if (indice < parrafos.length) {
+                        setTimeout(mostrarSiguienteParrafo, 1500);
+                    }
+                });
+            }
+        }
+
+        mostrarSiguienteParrafo();
+    </script>
+</body>
+</html>

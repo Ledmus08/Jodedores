@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construye Tu Piscina</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+
+        }
+
+        .container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-color: #555;
+            border: 5px solid #333;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: flex;
+        }
+
+        .game-area {
+            position: relative;
+            width: 600px;
+            height: 100%;
+            background-color: #8dcf46; 
+            transition: background-color 0.5s ease-in-out;
+            cursor: none; 
+            overflow: hidden; 
+        }
+
+        .excavation-area {
+            position: absolute;
+            width: 180px; 
+            height: 270px; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px dashed #8f6747; 
+            pointer-events: none;
+            z-index: 5;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+        }
+
+        .excavation-cell {
+            font-size: 1px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .excavated {
+            background-color: #795548; 
+        }
+
+        .pool-structure {
+            background-color: #607d8b; 
+        }
+
+        .water {
+            background-color: #2196f3; 
+            opacity: 0.8;
+        }
+
+        .cursor {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 10px; 
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 200px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #0db613;
+            border-radius: 10px;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .instruction {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 10px; 
+        }
+
+        .narrator {
+            width: 200px;
+            height: 100%;
+            background-color: #636262;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border-left: 1px solid #4b4b4b;
+        }
+
+        .narrator-title {
+            font-size: 13px; 
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #38010100;
+        }
+
+        .narrator-step {
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #ffffff;
+            font-size: 12px; 
+        }
+
+        .narrator-step.active {
+            font-weight: bold;
+            color: #00bb28;
+        }
+
+        .narrator-info {
+            font-size: 9px; 
+            color: #ffffff;
+            margin-top: auto;
+            text-align: left;
+        }
+
+        .tree {
+            position: absolute;
+            z-index: 1;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 50%, #8bc34a 0%, #689f38 70%, #558b2f 100%);
+        }
+
+        .emote-container {
+            position: absolute;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            width: 100px;
+            height: auto;
+        }
+
+        .emote-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(-50%);
+            }
+            40% {
+                transform: translateY(-60%);
+            }
+            60% {
+                transform: translateY(-55%);
+            }
+        }
+
+        .emote-container.bounce {
+            animation: bounce 1s infinite ease-in-out;
+        }
+
+        #volver-button {
+            padding: 10px 20px;
+            font-size: 10px; 
+            cursor: pointer;
+            background-color: #009714; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            font-family: 'Press Start 2P', cursive; 
+        }
+
+        #volver-button:hover {
+            background-color: #009714; 
+        }
+
+        #game-over-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-family: 'Press Start 2P', cursive; 
+        }
+
+        #overlay-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            filter: blur(5px);
+        }
+
+        #overlay-content {
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        #celebration-image {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        #overlay-content div {
+            font-size: 12px; 
+            margin-bottom: 20px;
+        }
+
+        #confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes confetti-fall-down {
+            to {
+                transform: translateY(120vh) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emote-container bounce">
+            <img src="https://cdn.7tv.app/emote/01J9JFW8280008R24SYMWRRXS6/4x.avif" alt="Pog">
+        </div>
+        <div class="game-area">
+            <div class="excavation-area">
+                </div>
+            <div class="cursor"></div>
+            <div class="tooltip"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="instruction">Mantén presionado y mueve para cavar</div>
+
+            <div class="tree" style="top: 80px; right: 60px;"></div>
+            <div class="tree" style="bottom: 70px; left: 30px;"></div>
+            <div class="tree" style="bottom: 40px; right: 20px;"></div>
+
+        </div>
+        <div class="narrator">
+            <div class="narrator-title">Pasos de Construcción</div>
+            <div class="narrator-step active" id="step-dig">1. Cava el rectángulo</div>
+            <div class="narrator-step" id="step-structure">2. Coloca la estructura</div>
+            <div class="narrator-step" id="step-fill">3. Llena con agua</div>
+            <div class="narrator-info">Dato: Una piscina bien construida puede durar décadas.</div>
+        </div>
+    </div>
+<div id="game-over-overlay">
+    <div id="overlay-background"></div>
+    <div id="overlay-content">
+        <img id="celebration-image" src="https://cdn.7tv.app/emote/01FMF38W680001FS6N1BY0TW35/4x.avif" alt="¡Muy bien!">
+        <div>¡MUY BIEN!</div>
+<button id="volver-button">Volver</button>     </div>
+</div>
+<div id="confetti-container"></div>
+
+    <audio id="sonidojuego" autoplay loop volume="0.2">
+        <source src="FREE Construction Sound Effect.mp3" type="audio/mpeg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+
+    <button style="position: absolute; top: 10px; left: 10px; background-color: #009714; color: white; padding: 10px 20px; font-size: 12px; cursor: pointer; z-index: 1000; border: none; border-radius: 8px; font-weight: bold; font-family: 'Press Start 2P', cursive;" onclick="window.location.href='index.html'">Volver</button>
+
+    <script>
+        const container = document.querySelector('.container');
+        const gameArea = document.querySelector('.game-area');
+        const excavationAreaElement = document.querySelector('.excavation-area');
+        const cursor = document.querySelector('.cursor');
+        const tooltip = document.querySelector('.tooltip');
+        const progressBar = document.querySelector('.progress-bar');
+        const instructionText = document.querySelector('.instruction');
+        const stepDig = document.getElementById('step-dig');
+        const stepStructure = document.getElementById('step-structure');
+        const stepFill = document.getElementById('step-fill');
+        const emoteContainer = document.querySelector('.emote-container');
+
+        let painting = false;
+        const excavatedCells = new Set();
+        const structureCells = new Set();
+        const waterCells = new Set();
+        let currentStage = 0; 
+        const poolWidthCells = 6;
+        const poolHeightCells = 9;
+        const totalCells = poolWidthCells * poolHeightCells;
+        let paintedCount = 0;
+
+        const gameAreaRect = gameArea.getBoundingClientRect();
+
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('excavation-cell');
+            cell.dataset.index = i;
+            excavationAreaElement.appendChild(cell);
+        }
+
+        const excavationCells = Array.from(excavationAreaElement.children);
+
+        function getCellIndex(clientX, clientY) {
+            const rect = excavationAreaElement.getBoundingClientRect();
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            const col = Math.floor(x / (rect.width / poolWidthCells));
+            const row = Math.floor(y / (rect.height / poolHeightCells));
+            if (col >= 0 && col < poolWidthCells && row >= 0 && row < poolHeightCells) {
+                return row * poolWidthCells + col;
+            }
+            return -1;
+        }
+
+        function updateCursor(event) {
+            cursor.style.left = event.clientX - gameAreaRect.left + 'px';
+            cursor.style.top = event.clientY - gameAreaRect.top + 'px';
+        }
+
+        function showTooltip(message, x, y) {
+            tooltip.textContent = message;
+            tooltip.style.left = x + 15 + 'px';
+            tooltip.style.top = y - 25 + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('show');
+        }
+
+        function paint(index, className, cellsSet, nextStage, instruction, nextStep) {
+            if (index >= 0 && !cellsSet.has(index)) {
+                cellsSet.add(index);
+                excavationCells[index].classList.add(className);
+                paintedCount = cellsSet.size;
+                updateProgressBar(paintedCount, totalCells);
+                if (paintedCount === totalCells) {
+                    currentStage = nextStage;
+                    instructionText.textContent = instruction;
+                    stepDig.classList.remove('active');
+                    stepStructure.classList.remove('active');
+                    stepFill.classList.remove('active');
+                    if (nextStep === 1) stepStructure.classList.add('active');
+                    if (nextStep === 2) stepFill.classList.add('active');
+                    paintedCount = 0; 
+                    if (currentStage === 3) {
+                        instructionText.textContent = '¡Piscina lista!';
+                        finishGame(); 
+                    }
+                }
+            }
+        }
+
+        function handleMouseMove(event) {
+            updateCursor(event);
+            const index = getCellIndex(event.clientX, event.clientY);if (painting && index !== -1) {
+                if (currentStage === 0) {
+                    paint(index, 'excavated', excavatedCells, 1, 'Mantén presionado y mueve para construir la estructura', 1);
+                } else if (currentStage === 1) {
+                    if (excavatedCells.has(index)) {
+                        paint(index, 'pool-structure', structureCells, 2, 'Mantén presionado y mueve para llenar con agua', 2);
+                    }
+                } else if (currentStage === 2) {
+                    if (structureCells.has(index)) {
+                        paint(index, 'water', waterCells, 3, '¡Piscina lista!', 3);
+                    }
+                }
+            }
+
+            let tooltipText = '';
+            if (currentStage === 0) tooltipText = 'Cavar';
+            else if (currentStage === 1) tooltipText = 'Construir';
+            else if (currentStage === 2) tooltipText = 'Llenar';
+            else if (currentStage === 3) tooltipText = 'Finalizado';
+
+            showTooltip(tooltipText, event.clientX - gameAreaRect.left, event.clientY - gameAreaRect.top);
+        }
+
+        function handleMouseDown() {
+            painting = true;
+        }
+
+        function handleMouseUp() {
+            painting = false;
+        }
+
+        function updateProgressBar(progress, total) {
+            const percentage = (progress / total) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+
+        gameArea.addEventListener('mousedown', handleMouseDown);
+        gameArea.addEventListener('mouseup', handleMouseUp);
+        gameArea.addEventListener('mousemove', handleMouseMove);
+        gameArea.addEventListener('mouseout', hideTooltip);
+
+function finishGame() {
+    setTimeout(() => {
+        const gameOverOverlay = document.getElementById('game-over-overlay');
+        gameOverOverlay.style.display = 'flex';
+
+        const volverButton = document.getElementById('volver-button');
+        volverButton.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        createConfetti();
+    }, 1000);
+}
+
+    function createConfetti() {
+    const confettiContainer = document.getElementById('confetti-container');
+    const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+    const numberOfConfetti = 200;
+
+    for (let i = 0; i < numberOfConfetti; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.position = 'absolute';
+        confetti.style.left = `${Math.random() * 100}vw`; 
+        confetti.style.top = '-5vh'; 
+        confetti.style.opacity = Math.random() + 0.5;
+        confetti.style.transform = `scale(${Math.random() * 1.5})`;
+        confetti.style.animation = `confetti-fall-down ${Math.random() * 3 + 2}s linear infinite`; 
+
+        confettiContainer.appendChild(confetti);
+    }
+}
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = `
+    @keyframes confetti-fall-down {
+        to {
+            transform: translateY(120vh) scale(1);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(styleSheet);
+
+        const audioElement = document.getElementById('sonidojuego');
+        audioElement.volume = 0.1; 
+    </script>
+</body>
+</html>
